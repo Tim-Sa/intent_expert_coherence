@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
@@ -27,3 +27,19 @@ class TextIntentUpdate(BaseModel):
     expert_id: Optional[int] = None
     intent_id: Optional[int] = None
     is_true: Optional[bool] = None
+
+
+class ExpertCreate(BaseModel):
+    name: Optional[str] = Field(default=None)
+    phone: Optional[str] = Field(default=None)
+
+
+class ExpertRead(BaseModel):
+    expert_id: int
+    name: Optional[str] = Field(default=None)
+    phone: Optional[str] = Field(default=None)
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Boolean, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, Boolean, Text, TIMESTAMP, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -18,4 +18,15 @@ class TextIntent(Base):
     text = relationship("Text")
     expert = relationship("Expert")
     intent = relationship("Intent")
+
+
+class Expert(Base):
+    __tablename__ = 'expert'
+
+    expert_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(Text, nullable=True)
+    phone = Column(Text, nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
+
 
