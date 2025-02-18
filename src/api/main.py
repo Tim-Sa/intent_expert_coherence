@@ -14,12 +14,10 @@ import src.model.model as py_model  # Pydantic models
 
 from src.database.dal import create_expert, get_expert, get_all_experts, update_expert, delete_expert
 
-# FastAPI setup
 app = FastAPI(title="Expert API")
 router = APIRouter()
 
 
-# Dependency to get DB session
 async def get_db() -> AsyncSession:
     async with AsyncSessionLocal() as session:
         yield session
@@ -74,7 +72,6 @@ async def delete_expert_endpoint(
     return {"detail": "Expert deleted successfully"}
 
 
-# Include the router
 app.include_router(router)
 
 
