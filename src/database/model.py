@@ -15,9 +15,9 @@ class TextIntent(Base):
     is_true = Column(Boolean, nullable=False, default=True)
     created_at = Column(TIMESTAMP, default=datetime.utcnow, nullable=False)
 
-    text = relationship("Text")
-    expert = relationship("Expert")
-    intent = relationship("Intent")
+    # text = relationship("Text")
+    # expert = relationship("Expert")
+    # intent = relationship("Intent")
 
 
 class Expert(Base):

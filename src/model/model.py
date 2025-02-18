@@ -19,6 +19,7 @@ class TextIntentRead(BaseModel):
     created_at: datetime
 
     class Config:
+        from_attributes=True
         orm_mode = True
 
 
@@ -42,4 +43,5 @@ class ExpertRead(BaseModel):
     updated_at: datetime
 
     class Config:
+        from_attributes=True
         orm_mode = True
