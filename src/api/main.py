@@ -21,6 +21,7 @@ router = APIRouter()
 async def get_db() -> AsyncSession:
     async with AsyncSessionLocal() as session:
         yield session
+        await session.commit()
 
 
 @router.post("/experts/", response_model=py_model.ExpertRead, tags=["Experts"])
