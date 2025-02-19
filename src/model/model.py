@@ -20,7 +20,6 @@ class TextIntentRead(BaseModel):
 
     class Config:
         from_attributes=True
-        orm_mode = True
 
 
 class TextIntentUpdate(BaseModel):
@@ -44,4 +43,3 @@ class ExpertRead(BaseModel):
 
     class Config:
         from_attributes=True
-        orm_mode = True

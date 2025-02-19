@@ -23,3 +23,11 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False,
 )
 
+
+async def init_db(session: AsyncSession):
+    async with session.begin():
+        await session.run_sync(Base.metadata.create_all)
+
+
+async def close_db(session: AsyncSession):
+    await session.close()

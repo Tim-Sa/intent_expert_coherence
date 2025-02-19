@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from src.database.async_session import AsyncSessionLocal
 
-import src.database.model as db_model # sqlalchemy schemas
+import src.database.model as db_model # sqlalchemy models
 import src.model.model as py_model  # Pydantic models
 
 from src.database.dal import create_expert, get_expert, get_all_experts, update_expert, delete_expert
@@ -24,7 +24,7 @@ async def get_db() -> AsyncSession:
         await session.commit()
 
 
-@router.post("/experts/", response_model=py_model.ExpertRead, tags=["Experts"])
+@router.post("/experts/", response_model=py_model.ExpertRead, tags=["Experts"], status_code=status.HTTP_201_CREATED)
 async def create_expert_endpoint(
     expert: py_model.ExpertCreate,
     db: AsyncSession = Depends(get_db),
@@ -75,7 +75,3 @@ async def delete_expert_endpoint(
 
 app.include_router(router)
 
-
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="127.0.0.1", port=8000)

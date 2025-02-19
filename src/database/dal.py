@@ -81,7 +81,7 @@ async def create_text_intent(
     text_intent: py_model.TextIntentCreate
 ) -> py_model.TextIntentRead:
     return await create_instance(
-        db, db_model.TextIntent, text_intent.dict(), py_model.TextIntentRead
+        db, db_model.TextIntent, text_intent.model_dump(), py_model.TextIntentRead
     )
 
 
@@ -104,7 +104,7 @@ async def update_text_intent(
     text_intent_update: py_model.TextIntentUpdate
 ) -> Optional[py_model.TextIntentRead]:
     return await update_instance(
-        db, db_model.TextIntent, text_intent_id, 'text_intent_id', text_intent_update.dict(exclude_unset=True)
+        db, db_model.TextIntent, text_intent_id, 'text_intent_id', text_intent_update.model_dump(exclude_unset=True)
     )
 
 
@@ -119,7 +119,7 @@ async def create_expert(
     db: AsyncSession,
     expert: py_model.ExpertCreate
 ) -> py_model.ExpertRead:
-    return await create_instance(db, db_model.Expert, expert.dict(), py_model.ExpertRead)
+    return await create_instance(db, db_model.Expert, expert.model_dump(), py_model.ExpertRead)
 
 
 async def get_expert(
@@ -141,7 +141,7 @@ async def update_expert(
     expert_update: py_model.ExpertCreate
 ) -> Optional[py_model.ExpertRead]:
     return await update_instance(
-        db, db_model.Expert, expert_id, 'expert_id', expert_update.dict(exclude_unset=True)
+        db, db_model.Expert, expert_id, 'expert_id', expert_update.model_dump(exclude_unset=True)
     )
 
 

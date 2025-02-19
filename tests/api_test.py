@@ -1,30 +1,58 @@
 import pytest
-from httpx import AsyncClient, ASGITransport
-from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
+from httpx import ASGITransport, AsyncClient
 
-from src.database.async_session import AsyncSessionLocal
-from src.model.model import ExpertCreate, ExpertRead
-from src.api.main import app
+from src.api.main import app, get_db
+import src.model.model as py_model
+import src.database.model as db_model
+
+DATABASE_URL = "sqlite+aiosqlite:///:memory:"  
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
 
-@pytest.fixture
-async def client():
+@pytest.fixture(scope="module")
+async def setup_database():
+    async with engine.begin() as conn:
+        await conn.run_sync(db_model.Base.metadata.create_all)
+    yield  
+    async with engine.begin() as conn:
+        await conn.run_sync(db_model.Base.metadata.drop_all) 
+
+
+@pytest.fixture()
+async def db_session(setup_database):
+    async with AsyncSessionLocal() as session:
+        yield session
+
+
+@pytest.fixture()
+async def client(db_session):
+    async def override_get_db():
+        yield db_session
+    app.dependency_overrides[get_db] = override_get_db 
     async with AsyncClient(
-            transport=ASGITransport(app=app), 
-            base_url="http://test"
-        ) as client:
-        
-        yield client
+        transport=ASGITransport(app=app), 
+        base_url="http://test") as client:
+        yield client 
 
 
 @pytest.fixture
 async def create_expert_data():
-    return ExpertCreate(name="John Doe", phone="123-456-7890")
+    return py_model.ExpertCreate(name="John Doe", phone="123-456-7890")
 
 
 @pytest.mark.asyncio
 async def test_create_expert(client, create_expert_data):
-    response = await client.post("/experts/", json=create_expert_data.dict())
+    response = await client.post("/experts/", json=create_expert_data.model_dump())
     assert response.status_code == 201
     assert response.json()["name"] == create_expert_data.name
 
@@ -44,9 +72,9 @@ async def test_get_all_experts(client):
 
 
 @pytest.mark.asyncio
-async def test_update_expert(client, create_expert_data):
-    expert_update = ExpertCreate(name="Jane Doe", phone="987-654-3210")
-    response = await client.put("/experts/1", json=expert_update.dict())
+async def test_update_expert(client):
+    expert_update = py_model.ExpertCreate(name="Jane Doe", phone="987-654-3210")
+    response = await client.put("/experts/1", json=expert_update.model_dump())
     assert response.status_code == 200
     assert response.json()["name"] == expert_update.name
 
@@ -67,8 +95,8 @@ async def test_get_expert_not_found(client):
 
 @pytest.mark.asyncio
 async def test_update_expert_not_found(client):
-    expert_update = ExpertCreate(name="Non-existing Expert", phone="111-222-3333")
-    response = await client.put("/experts/99999", json=expert_update.dict())
+    expert_update = py_model.ExpertCreate(name="Non-existing Expert", phone="111-222-3333")
+    response = await client.put("/experts/99999", json=expert_update.model_dump())
     assert response.status_code == 404
     assert response.json()["detail"] == "Expert not found"
 
