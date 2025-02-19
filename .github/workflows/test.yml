@@ -23,6 +23,14 @@ jobs:
       run: |
         pip install -r test.requirements.txt
 
+    - name: Create .env file
+      run: |
+        echo "PSQL_DB_USERNAME=${{ secrets.PSQL_DB_USERNAME }}" >> .env
+        echo "PSQL_DB_PASSWORD=${{ secrets.PSQL_DB_PASSWORD }}" >> .env
+        echo "PSQL_DB_HOST=${{ secrets.PSQL_DB_HOST }}" >> .env
+        echo "PSQL_DB_PORT=${{ secrets.PSQL_DB_PORT }}" >> .env
+        echo "PSQL_DB_DATABASE_NAME=${{ secrets.PSQL_DB_DATABASE_NAME }}" >> .env
+
     - name: Run tests
       run: |
         pytest tests/test_api.py
