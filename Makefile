@@ -1,5 +1,5 @@
 test:
-	pytest tests/api_test.py
+	pytest tests/test_api.py
 
 t:
 	make test
