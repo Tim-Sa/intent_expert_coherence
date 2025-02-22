@@ -13,6 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Create .env file
+        run: |
+          echo "PSQL_DB_USERNAME=${{ secrets.PSQL_DB_USERNAME }}" >> .env
+          echo "PSQL_DB_PASSWORD=${{ secrets.PSQL_DB_PASSWORD }}" >> .env
+          echo "PSQL_DB_HOST=${{ secrets.PSQL_DB_HOST }}" >> .env
+          echo "PSQL_DB_PORT=${{ secrets.PSQL_DB_PORT }}" >> .env
+          echo "PSQL_DB_DATABASE_NAME=${{ secrets.PSQL_DB_DATABASE_NAME }}" >> .env
+
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
@@ -26,6 +34,7 @@ jobs:
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./src "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./Dockerfile "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./docker-compose.yml "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
+          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no .env "$SERVER_USER@$SERVER_IP:$TARGET_DIR"  # Copy .env file
 
       - name: Restart Docker containers
         env:
