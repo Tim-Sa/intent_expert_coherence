@@ -34,7 +34,7 @@ jobs:
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./src "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./Dockerfile "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./docker-compose.yml "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
-          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no .env "$SERVER_USER@$SERVER_IP:$TARGET_DIR"  # Copy .env file
+          sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no ./requirements.txt "$SERVER_USER@$SERVER_IP:$TARGET_DIR"
 
       - name: Restart Docker containers
         env:
