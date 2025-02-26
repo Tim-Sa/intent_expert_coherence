@@ -28,7 +28,7 @@ jobs:
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}`
           TARGET_DIR: /home/${{ secrets.SERVER_USER }}/intent_expert_coherence_api
         run: |
           sshpass -p "$SERVER_PASSWORD" scp -o StrictHostKeyChecking=no -r ./src "$SERVER_USER@$SERVER_IP:$TARGET_DIR"

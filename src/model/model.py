@@ -43,3 +43,27 @@ class ExpertRead(BaseModel):
 
     class Config:
         from_attributes=True
+
+
+class IntentTypeCreate(BaseModel):
+    expert_id: int
+    name: str
+    frequency: Optional[int] = Field(default=0)
+
+
+class IntentTypeUpdate(BaseModel):
+    name: Optional[str] = None 
+    frequency: Optional[int] = None
+
+
+class IntentTypeRead(BaseModel):
+    type_id: int
+    expert_id: int
+    name: Optional[str] = Field(default=None)
+    frequency: Optional[int] = Field(default=None)
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes=True
+

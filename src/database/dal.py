@@ -150,3 +150,40 @@ async def delete_expert(
     expert_id: int
 ) -> bool:
     return await delete_instance(db, db_model.Expert, expert_id, 'expert_id')
+
+
+async def create_intent_type(
+    db: AsyncSession,
+    intent_type: py_model.IntentTypeCreate
+) -> py_model.IntentTypeRead:
+    return await create_instance(db, db_model.IntentType, intent_type.model_dump(), py_model.IntentTypeRead)
+
+
+async def get_intent_type(
+    db: AsyncSession,
+    intent_type_id: int
+) -> Optional[py_model.IntentTypeRead]:
+    return await get_instance(db, db_model.IntentType, intent_type_id, 'type_id')
+
+
+async def get_all_intent_types(
+    db: AsyncSession
+) -> List[py_model.IntentTypeRead]:
+    return await get_all_instances(db, db_model.IntentType)
+
+
+async def update_intent_type(
+    db: AsyncSession,
+    intent_type_id: int,
+    intent_type_update: py_model.IntentTypeUpdate
+) -> Optional[py_model.IntentTypeRead]:
+    return await update_instance(
+        db, db_model.IntentType, intent_type_id, 'type_id', intent_type_update.model_dump(exclude_unset=True)
+    )
+
+
+async def delete_intent_type(
+    db: AsyncSession,
+    intent_type_id: int
+) -> bool:
+    return await delete_instance(db, db_model.IntentType, intent_type_id, 'type_id')

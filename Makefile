@@ -15,6 +15,7 @@ bs:
 # docker mode
 COMPOSE_FILE=docker-compose.yml 
 CONTAINER_NAME=intent-api
+IMAGE_NAME=intent_expert_coherence_intent-api
 
 start:
 	docker-compose -f $(COMPOSE_FILE) up -d
@@ -33,5 +34,8 @@ logs:
 
 restart: stop start
 
-clean: stop rm
+rmi:
+	docker rmi -f $(IMAGE_NAME)
+
+clean: stop rm rmi
 

@@ -30,3 +30,13 @@ class Expert(Base):
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
 
 
+class IntentType(Base):
+    __tablename__ = 'intent_type'
+
+    type_id = Column(Integer, primary_key=True, autoincrement=True)
+    expert_id = Column(Integer, ForeignKey('expert.expert_id'), nullable=False)
+    name = Column(Text, nullable=True)
+    frequency = Column(Integer, nullable=True, default=0)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
+

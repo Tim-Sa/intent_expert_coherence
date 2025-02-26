@@ -106,3 +106,67 @@ async def test_delete_expert_not_found(client):
     response = await client.delete("/experts/99999")
     assert response.status_code == 404
     assert response.json()["detail"] == "Expert not found"
+
+
+@pytest.fixture
+async def create_intent_type_data():
+    return py_model.IntentTypeCreate(name="General Inquiry", expert_id=1)
+
+
+@pytest.mark.asyncio
+async def test_create_intent_type(client, create_intent_type_data):
+    response = await client.post("/intent-types/", json=create_intent_type_data.model_dump())
+    assert response.status_code == 201
+    assert response.json()["name"] == create_intent_type_data.name
+
+
+@pytest.mark.asyncio
+async def test_get_intent_type(client):
+    response = await client.get("/intent-types/1")
+    assert response.status_code == 200
+    assert "name" in response.json()
+
+
+@pytest.mark.asyncio
+async def test_get_all_intent_types(client):
+    response = await client.get("/intent-types/")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)
+
+
+@pytest.mark.asyncio
+async def test_update_intent_type(client):
+    intent_type_update = py_model.IntentTypeUpdate(name="Updated Inquiry")
+    response = await client.put("/intent-types/1", json=intent_type_update.model_dump())
+    assert response.status_code == 200
+    assert response.json()["name"] == intent_type_update.name
+
+
+@pytest.mark.asyncio
+async def test_delete_intent_type(client):
+    response = await client.delete("/intent-types/1")
+    assert response.status_code == 200
+    assert response.json() == {"detail": "Intent Type deleted successfully"}
+
+
+@pytest.mark.asyncio
+async def test_get_intent_type_not_found(client):
+    response = await client.get("/intent-types/99999")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Intent Type not found"
+
+
+@pytest.mark.asyncio
+async def test_update_intent_type_not_found(client):
+    intent_type_update = py_model.IntentTypeUpdate(name="Non-existing Intent Type")
+    response = await client.put("/intent-types/99999", json=intent_type_update.model_dump())
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Intent Type not found"
+
+
+@pytest.mark.asyncio
+async def test_delete_intent_type_not_found(client):
+    response = await client.delete("/intent-types/99999")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Intent Type not found"
+
