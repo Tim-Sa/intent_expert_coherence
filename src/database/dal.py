@@ -187,3 +187,40 @@ async def delete_intent_type(
     intent_type_id: int
 ) -> bool:
     return await delete_instance(db, db_model.IntentType, intent_type_id, 'type_id')
+
+
+async def create_intent(
+    db: AsyncSession,
+    intent: py_model.IntentCreate
+) -> py_model.IntentRead:
+    return await create_instance(db, db_model.Intent, intent.model_dump(), py_model.IntentRead)
+
+
+async def get_intent(
+    db: AsyncSession,
+    intent_id: int
+) -> Optional[py_model.IntentRead]:
+    return await get_instance(db, db_model.Intent, intent_id, 'intent_id')
+
+
+async def get_all_intents(
+    db: AsyncSession
+) -> List[py_model.IntentRead]:
+    return await get_all_instances(db, db_model.Intent)
+
+
+async def update_intent(
+    db: AsyncSession,
+    intent_id: int,
+    intent_update: py_model.IntentUpdate
+) -> Optional[py_model.IntentRead]:
+    return await update_instance(
+        db, db_model.Intent, intent_id, 'intent_id', intent_update.model_dump(exclude_unset=True)
+    )
+
+
+async def delete_intent(
+    db: AsyncSession,
+    intent_id: int
+) -> bool:
+    return await delete_instance(db, db_model.Intent, intent_id, 'intent_id')
