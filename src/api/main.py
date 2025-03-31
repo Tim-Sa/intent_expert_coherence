@@ -15,8 +15,10 @@ import src.model.model as py_model  # Pydantic models
 import src.database.dal as dal 
 
 app = FastAPI(title="Expert API")
+
 expert_router = APIRouter()
 intent_type_router = APIRouter()
+intent_router = APIRouter()
 
 
 async def get_db() -> AsyncSession:
@@ -123,6 +125,56 @@ async def delete_intent_type_endpoint(
     return {"detail": "Intent Type deleted successfully"}
 
 
+@intent_router.post("/intents/", response_model=py_model.IntentRead, tags=["Intents"], status_code=status.HTTP_201_CREATED)
+async def create_intent_endpoint(
+    intent: py_model.IntentCreate,
+    db: AsyncSession = Depends(get_db),
+):
+    return await dal.create_intent(db, intent)
+
+
+@intent_router.get("/intents/{intent_id}", response_model=py_model.IntentRead, tags=["Intents"])
+async def get_intent_endpoint(
+    intent_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    intent = await dal.get_intent(db, intent_id)
+    if not intent:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Intent not found")
+    return intent
+
+
+@intent_router.get("/intents/", response_model=List[py_model.IntentRead], tags=["Intents"])
+async def get_all_intents_endpoint(
+    db: AsyncSession = Depends(get_db),
+):
+    return await dal.get_all_intents(db)
+
+
+@intent_router.put("/intents/{intent_id}", response_model=py_model.IntentRead, tags=["Intents"])
+async def update_intent_endpoint(
+    intent_id: int,
+    intent_update: py_model.IntentUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    updated_intent = await dal.update_intent(db, intent_id, intent_update)
+    if not updated_intent:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Intent not found")
+    return updated_intent
+
+
+@intent_router.delete("/intents/{intent_id}", response_model=dict, tags=["Intents"])
+async def delete_intent_endpoint(
+    intent_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    success = await dal.delete_intent(db, intent_id)
+    if not success:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Intent not found")
+    return {"detail": "Intent deleted successfully"}
+
+
 app.include_router(expert_router)
 app.include_router(intent_type_router)
+app.include_router(intent_router)
 

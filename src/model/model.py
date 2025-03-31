@@ -67,3 +67,30 @@ class IntentTypeRead(BaseModel):
     class Config:
         from_attributes=True
 
+
+class IntentCreate(BaseModel):
+    expert_id: int
+    name: Optional[str] = Field(default=None)
+    type_id: int
+    frequency: Optional[int] = Field(default=None)
+    k_fleiss_coherence: Optional[float] = Field(default=None)
+
+
+class IntentUpdate(BaseModel):
+    name: Optional[str] = None
+    frequency: Optional[int] = None
+    k_fleiss_coherence: Optional[float] = None
+
+
+class IntentRead(BaseModel):
+    intent_id: int
+    expert_id: int
+    name: Optional[str] = Field(default=None)
+    type_id: int
+    frequency: Optional[int] = Field(default=None)
+    k_fleiss_coherence: Optional[float] = Field(default=None)
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes=True
