@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker
 from httpx import ASGITransport, AsyncClient
 
 from src.api.main import app, get_db
-import src.model.model as py_model
-import src.database.model as db_model
+import src.model.entity as py_model
+import src.database.model.entity as db_model
 
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"  
 

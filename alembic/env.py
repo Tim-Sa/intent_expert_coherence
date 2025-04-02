@@ -1,3 +1,7 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -24,6 +28,28 @@ target_metadata = None
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+if Path(".local.env").is_file():
+    load_dotenv(".local.env")
+elif Path(".env").is_file():
+    load_dotenv(".env")
+else:
+    raise FileNotFoundError(f"env file does not exist.")
+
+db_username = os.getenv('PSQL_DB_USERNAME')
+db_password = os.getenv('PSQL_DB_PASSWORD')
+db_name = os.getenv('PSQL_DB_DATABASE_NAME')
+db_host = os.getenv('PSQL_DB_HOST') 
+db_port = os.getenv('PSQL_DB_PORT')
+
+print("DB User:", db_username)  
+print("DB Host:", db_host)        
+print("DB Port:", db_port)        
+print("DB Name:", db_name)        
+
+url = f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+
+config.set_main_option('sqlalchemy.url', url)
 
 
 def run_migrations_offline() -> None:
