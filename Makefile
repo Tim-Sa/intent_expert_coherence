@@ -1,6 +1,6 @@
 # direct mode
 test:
-	pytest tests/test_api.py
+	pytest tests/test_api_entity.py
 
 t:
 	make test
