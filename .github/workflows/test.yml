@@ -33,4 +33,4 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests/api/test_api_entity.py
+        pytest tests/test_api_entity.py
