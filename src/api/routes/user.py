@@ -16,6 +16,8 @@ import src.database.dal.user as dal
 from src.auth.hash_password import HashPassword
 from src.auth.jwt_handler import verify_access_token
 
+from src.api.utils import get_db
+
 user_router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/signin")
@@ -35,18 +37,22 @@ async def authenticate(token: str = Depends(oauth2_scheme)) -> str:
     return decoded_token["user"]
 
 
-# @user_router.post(
-#     "/user/signin", 
-#     response_model=py_model.UserRead, 
-#     tags=["Users"], 
-#     status_code=status.HTTP_201_CREATED
-# )
-# async def create_user_endpoint(
-#     user: py_model.UserCreate,
-#     db: AsyncSession = Depends(get_db),
-# ):
+@user_router.post(
+    "/user/signin", 
+    response_model=py_model.Token, 
+    tags=["Users"], 
+    status_code=status.HTTP_201_CREATED
+)
+async def create_user_endpoint(
+    user: py_model.UserWrite,
+    db: AsyncSession = Depends(get_db),
+):
 
-#     hashed_password = hash_password.create_hash(user.password)
-#     user.password = hashed_password 
+    hashed_password = hash_password.create_hash(user.password)
+    new_user = py_model.UserCreate(
+        username = user.username,
+        email = user.email,
+        hashed_password = hashed_password 
+    )
 
-#     return await dal.create_user(db, user)
+    return await dal.create_user(db, new_user)

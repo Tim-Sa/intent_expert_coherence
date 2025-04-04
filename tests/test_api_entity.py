@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from httpx import ASGITransport, AsyncClient
 
-from src.api.main import app, get_db
+from src.api.main import app
+from src.api.utils import get_db
 import src.model.entity as py_model
 import src.database.model.entity as db_model
 

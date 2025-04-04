@@ -7,23 +7,16 @@ from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
 from typing import List, Optional
 
-from src.database.async_session import AsyncSessionLocal
-
-import src.database.model.entity as db_model # sqlalchemy models
-import src.model.entity as py_model  # Pydantic models
+import src.database.model.entity as db_model
+import src.model.entity as py_model
 
 import src.database.dal.entity as dal 
 
+from src.api.utils import get_db
 
 expert_router = APIRouter()
 intent_type_router = APIRouter()
 intent_router = APIRouter()
-
-
-async def get_db() -> AsyncSession:
-    async with AsyncSessionLocal() as session:
-        yield session
-        await session.commit()
 
 
 @expert_router.post(
