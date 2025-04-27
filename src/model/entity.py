@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
+from src.model.base import BaseModelConfig
+
 
 class TextIntentCreate(BaseModel):
     text_id: int
@@ -10,16 +12,13 @@ class TextIntentCreate(BaseModel):
     is_true: bool = True
 
 
-class TextIntentRead(BaseModel):
+class TextIntentRead(BaseModelConfig):
     text_intent_id: int
     text_id: int
     expert_id: int
     intent_id: int
     is_true: bool
     created_at: datetime
-
-    class Config:
-        from_attributes=True
 
 
 class TextIntentUpdate(BaseModel):
@@ -34,15 +33,12 @@ class ExpertCreate(BaseModel):
     phone: Optional[str] = Field(default=None)
 
 
-class ExpertRead(BaseModel):
+class ExpertRead(BaseModelConfig):
     expert_id: int
     name: Optional[str] = Field(default=None)
     phone: Optional[str] = Field(default=None)
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes=True
 
 
 class IntentTypeCreate(BaseModel):
@@ -56,16 +52,13 @@ class IntentTypeUpdate(BaseModel):
     frequency: Optional[int] = None
 
 
-class IntentTypeRead(BaseModel):
+class IntentTypeRead(BaseModelConfig):
     type_id: int
     expert_id: int
     name: Optional[str] = Field(default=None)
     frequency: Optional[int] = Field(default=None)
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes=True
 
 
 class IntentCreate(BaseModel):
@@ -82,7 +75,7 @@ class IntentUpdate(BaseModel):
     k_fleiss_coherence: Optional[float] = None
 
 
-class IntentRead(BaseModel):
+class IntentRead(BaseModelConfig):
     intent_id: int
     expert_id: int
     name: Optional[str] = Field(default=None)
@@ -91,6 +84,3 @@ class IntentRead(BaseModel):
     k_fleiss_coherence: Optional[float] = Field(default=None)
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes=True

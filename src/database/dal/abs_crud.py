@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -19,7 +19,7 @@ async def create_instance(
         db.add(db_instance)
         await db.flush()
         await db.refresh(db_instance)
-    return read_model.from_orm(db_instance)
+    return read_model.model_validate(db_instance)
 
 
 async def get_instance(
